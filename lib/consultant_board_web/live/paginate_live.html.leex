@@ -1,0 +1,59 @@
+<h1>Consultores</h1>
+<div id="consultants">
+  <div class="wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="item">
+            Nome
+          </th>
+          <th>
+            UF
+          </th>
+          <th>
+            Município
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for consultant <- @consultants do %>
+          <tr>
+            <td class="item">
+              <span class="id"><%= consultant.id %></span>
+              <%= consultant.name %>
+            </td>
+            <td>
+              <%= consultant.federative_unit %>
+            </td>
+            <td>
+              <%= consultant.city %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="footer">
+      <div class="pagination">
+        <%= if @options.page > 1 do %>
+          <%= pagination_link(@socket,
+                              "Previous",
+                              @options.page - 1,
+                              @options.per_page,
+                              "previous") %>
+        <% end %>
+        <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
+          <%= pagination_link(@socket,
+                                i,
+                                i,
+                                @options.per_page,
+                                (if i == @options.page, do: "active")) %>
+        <% end %>
+        <%= pagination_link(@socket,
+                              "Next",
+                              @options.page + 1,
+                              @options.per_page,
+                              "next") %>
+      </div>
+    </div>
+  </div>
+</div>
