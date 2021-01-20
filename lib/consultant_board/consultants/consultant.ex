@@ -15,6 +15,7 @@ defmodule ConsultantBoard.Consultants.Consultant do
     field :graduation_course, :string
     field :institution, :string
     field :name, :string
+    field :name_unaccent, :string
     field :phone, :string
     field :term, :string
 
@@ -24,7 +25,39 @@ defmodule ConsultantBoard.Consultants.Consultant do
   @doc false
   def changeset(consultant, attrs) do
     consultant
-    |> cast(attrs, [:city, :contract_start_date, :contract_type, :direct_support, :email, :expected_contract_end_date, :federative_unit, :graduation_course, :graduation_degree, :function, :institution, :name, :phone, :term])
-    |> validate_required([:city, :contract_start_date, :contract_type, :direct_support, :email, :expected_contract_end_date, :federative_unit, :graduation_course, :graduation_degree, :function, :institution, :name, :phone, :term])
+    |> cast(attrs, [
+      :city,
+      :contract_start_date,
+      :contract_type,
+      :direct_support,
+      :email,
+      :expected_contract_end_date,
+      :federative_unit,
+      :graduation_course,
+      :graduation_degree,
+      :function,
+      :institution,
+      :name,
+      :name_unaccent,
+      :phone,
+      :term
+    ])
+    |> validate_required([
+      :city,
+      :contract_start_date,
+      :contract_type,
+      :direct_support,
+      :email,
+      :expected_contract_end_date,
+      :federative_unit,
+      :graduation_course,
+      :graduation_degree,
+      :function,
+      :institution,
+      :name,
+      :name_unaccent,
+      :phone,
+      :term
+    ])
   end
 end

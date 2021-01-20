@@ -20,6 +20,7 @@ defmodule ConsultantBoardWeb.Router do
     live "/", PageLive, :index
     live "/consultant", ConsultantListLive
     live "/consultant/:id", ConsultantShowLive
+    live "/federative_unit", FederativeUnitListLive
   end
 
   # Other scopes may use custom stacks.

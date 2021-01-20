@@ -1,0 +1,34 @@
+<h1>Quantidade de consultores por UF</h1>
+<div id="federative_unit">
+  <div class="wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>
+            UF
+          </th>
+          <th>
+           Quantidade
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for federative_unit <- @federatives_units do %>
+          <tr>
+            <td>
+              <%= live_patch federative_unit.name,
+                    to: Routes.live_path(
+                              @socket,
+                              ConsultantBoardWeb.ConsultantListLive,
+                              %{filter: federative_unit.name}
+                        ) %>
+            </td>
+            <td>
+              <%= federative_unit.quantity %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

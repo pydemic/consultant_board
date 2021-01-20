@@ -255,3 +255,12 @@ header nav a {
   display: block;
   margin: -1rem 0 2rem; }
 
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px; }
+
+.menu {
+  margin: auto;
+  padding: 10px; }
+

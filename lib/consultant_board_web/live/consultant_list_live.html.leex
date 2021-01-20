@@ -1,6 +1,11 @@
-<h1>Consultores</h1>
+<h1>
+  Consultores
+  <%= if @options.filter != "" and  @options.filter != "-", do: " da UF " <> @options.filter %>
+  <%= if @options.filter == "-", do: " sem estado definido " %>
+</h1>
 <div id="consultants">
-    <form phx-submit="consultant-search">
+  <form phx-submit="consultant-search">
+    <input type="hidden" name="filter" value="<%= @options.filter %>"/>
     <input type="text" name="search" value="<%= @options.search %>"
             placeholder="Pesquisa"
             autofocus autocomplete="off"
@@ -17,11 +22,15 @@
     </div>
   <% end %>
   <div class="wrapper">
+    Quantidade de registros: <%= @quantity_consultants %>
     <table>
       <thead>
         <tr>
+          <th>
+            <%= sort_link(@socket, "Linha", :id, @options) %>
+          </th>
           <th class="item">
-            <%= sort_link(@socket, "Nome", :name, @options) %>
+            <%= sort_link(@socket, "Nome", :name_unaccent, @options) %>
           </th>
           <th>
             <%= sort_link(@socket, "UF", :federative_unit, @options) %>
@@ -34,8 +43,10 @@
       <tbody>
         <%= for consultant <- @consultants do %>
           <tr>
-            <td class="item">
+            <td>
               <span class="id"><%= consultant.id %></span>
+            </td>
+            <td class="item">
               <%= live_patch consultant.name,
                     to: Routes.live_path(
                               @socket,
@@ -54,29 +65,45 @@
       </tbody>
     </table>
     <div class="footer">
-      <div class="pagination">
+      <div class="center">
+        <%= if @options.page > 1 do %>
+          <%= pagination_link(@socket,
+                              "Primeira",
+                              1,
+                              @options.per_page,
+                              @options.search,
+                              @options.filter,
+                              "anterior") %>
+        <% end %>
         <%= if @options.page > 1 do %>
           <%= pagination_link(@socket,
                               "Anterior",
                               @options.page - 1,
                               @options.per_page,
                               @options.search,
+                              @options.filter,
                               "anterior") %>
         <% end %>
-        <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
+        <%= "Página " <> Integer.to_string(@options.page) %>
+
+        <%= if @options.page < @quantity_consultants/@options.per_page do %>
           <%= pagination_link(@socket,
-                                i,
-                                i,
+                                "Próxima",
+                                @options.page + 1,
                                 @options.per_page,
                                 @options.search,
-                                (if i == @options.page, do: "active")) %>
+                                @options.filter,
+                                "próxima") %>
         <% end %>
-        <%= pagination_link(@socket,
-                              "Próxima",
-                              @options.page + 1,
-                              @options.per_page,
-                              @options.search,
-                              "próxima") %>
+        <%= if @options.page < @quantity_consultants/@options.per_page do %>
+          <%= pagination_link(@socket,
+                                "Última",
+                                ceil(@quantity_consultants/@options.per_page),
+                                @options.per_page,
+                                @options.search,
+                                @options.filter,
+                                "última") %>
+        <% end %>
       </div>
     </div>
   </div>

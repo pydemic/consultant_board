@@ -15,6 +15,7 @@ defmodule ConsultantBoard.Repo.Migrations.CreateConsultants do
       add :function, :string
       add :institution, :string
       add :name, :string
+      add :name_unaccent, :string
       add :phone, :string
       add :term, :string
 

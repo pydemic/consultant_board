@@ -4,15 +4,11 @@ defmodule ConsultantBoardWeb.ConsultantShowLive do
   alias ConsultantBoard.Consultants
 
   def mount(%{"id" => consultant_id}, _session, socket) do
-    IO.puts(consultant_id)
     {:ok, assign(socket, :consultant, Consultants.get_consultant!(consultant_id))}
-    # {:ok, socket, temporary_assigns: []}
   end
 
-
-  def handle_params(params, _url, socket) do
-
-    socket = assign(socket,[])
+  def handle_params(_params, _url, socket) do
+    socket = assign(socket, [])
 
     {:noreply, socket}
   end

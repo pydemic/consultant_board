@@ -1,12 +1,14 @@
 alias ConsultantBoard.Consultants.Consultant
 alias ConsultantBoard.Repo
 
-{:ok, [header | spreadsheet_data]} = ConsultantBoard.DataPuller.GoogleSpreadsheetAPI.extract()
+{:ok, [_header | spreadsheet_data]} = ConsultantBoard.DataPuller.GoogleSpreadsheetAPI.extract()
 
-Enum.each(spreadsheet_data,
+Enum.each(
+  spreadsheet_data,
   fn line ->
     # [name, contract_type, term, direct_support, federative_unit, city, institution, graduation_course, function, graduation_degree, phone, email, contract_start_date, expected_contract_end_date]
     name = Enum.at(line, 0, "")
+    name_unaccent = name |> String.normalize(:nfd) |> String.replace(~r/[^A-z\s]/u, "")
     contract_type = Enum.at(line, 1, "")
     term = Enum.at(line, 2, "")
     direct_support = Enum.at(line, 3, "")
@@ -23,6 +25,7 @@ Enum.each(spreadsheet_data,
 
     %Consultant{
       name: name,
+      name_unaccent: name_unaccent,
       contract_type: contract_type,
       term: term,
       direct_support: direct_support,
