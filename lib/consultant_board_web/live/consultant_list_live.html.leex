@@ -1,17 +1,33 @@
 <h1>Consultores</h1>
 <div id="consultants">
+    <form phx-submit="consultant-search">
+    <input type="text" name="search" value="<%= @options.search %>"
+            placeholder="Pesquisa"
+            autofocus autocomplete="off"
+            <%= if @loading, do: "readonly" %> />
+
+    <button type="submit">
+      Pesquisar
+    </button>
+  </form>
+
+  <%= if @loading do %>
+    <div class="loader">
+      Loading...
+    </div>
+  <% end %>
   <div class="wrapper">
     <table>
       <thead>
         <tr>
           <th class="item">
-            Nome
+            <%= sort_link(@socket, "Nome", :name, @options) %>
           </th>
           <th>
-            UF
+            <%= sort_link(@socket, "UF", :federative_unit, @options) %>
           </th>
           <th>
-            Município
+            <%= sort_link(@socket, "Município", :city, @options) %>
           </th>
         </tr>
       </thead>
@@ -20,7 +36,12 @@
           <tr>
             <td class="item">
               <span class="id"><%= consultant.id %></span>
-              <%= consultant.name %>
+              <%= live_patch consultant.name,
+                    to: Routes.live_path(
+                              @socket,
+                              ConsultantBoardWeb.ConsultantShowLive,
+                              consultant.id
+                        ) %>
             </td>
             <td>
               <%= consultant.federative_unit %>
@@ -36,23 +57,26 @@
       <div class="pagination">
         <%= if @options.page > 1 do %>
           <%= pagination_link(@socket,
-                              "Previous",
+                              "Anterior",
                               @options.page - 1,
                               @options.per_page,
-                              "previous") %>
+                              @options.search,
+                              "anterior") %>
         <% end %>
         <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
           <%= pagination_link(@socket,
                                 i,
                                 i,
                                 @options.per_page,
+                                @options.search,
                                 (if i == @options.page, do: "active")) %>
         <% end %>
         <%= pagination_link(@socket,
-                              "Next",
+                              "Próxima",
                               @options.page + 1,
                               @options.per_page,
-                              "next") %>
+                              @options.search,
+                              "próxima") %>
       </div>
     </div>
   </div>

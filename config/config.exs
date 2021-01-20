@@ -29,3 +29,9 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+config :consultant_board, [
+    google_api_key: System.get_env("CONSULTANT_BOARD_GOOGLE_API_KEY"),
+    spreadsheet_id: System.get_env("CONSULTANT_BOARD_SPREADSHEET_ID"),
+    spreadsheet_page: System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE")
+  ]

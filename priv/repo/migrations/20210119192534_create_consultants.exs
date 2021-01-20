@@ -11,7 +11,7 @@ defmodule ConsultantBoard.Repo.Migrations.CreateConsultants do
       add :expected_contract_end_date, :string
       add :federative_unit, :string
       add :graduation_course, :string
-      add :graduadion_degree, :string
+      add :graduation_degree, :string
       add :function, :string
       add :institution, :string
       add :name, :string

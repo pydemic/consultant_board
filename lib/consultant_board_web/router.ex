@@ -18,7 +18,8 @@ defmodule ConsultantBoardWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
-    live "/paginate", PaginateLive
+    live "/consultant", ConsultantListLive
+    live "/consultant/:id", ConsultantShowLive
   end
 
   # Other scopes may use custom stacks.

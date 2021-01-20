@@ -11,7 +11,7 @@ defmodule ConsultantBoard.Consultants.Consultant do
     field :expected_contract_end_date, :string
     field :federative_unit, :string
     field :function, :string
-    field :graduadion_degree, :string
+    field :graduation_degree, :string
     field :graduation_course, :string
     field :institution, :string
     field :name, :string
@@ -24,7 +24,7 @@ defmodule ConsultantBoard.Consultants.Consultant do
   @doc false
   def changeset(consultant, attrs) do
     consultant
-    |> cast(attrs, [:city, :contract_start_date, :contract_type, :direct_support, :email, :expected_contract_end_date, :federative_unit, :graduation_course, :graduadion_degree, :function, :institution, :name, :phone, :term])
-    |> validate_required([:city, :contract_start_date, :contract_type, :direct_support, :email, :expected_contract_end_date, :federative_unit, :graduation_course, :graduadion_degree, :function, :institution, :name, :phone, :term])
+    |> cast(attrs, [:city, :contract_start_date, :contract_type, :direct_support, :email, :expected_contract_end_date, :federative_unit, :graduation_course, :graduation_degree, :function, :institution, :name, :phone, :term])
+    |> validate_required([:city, :contract_start_date, :contract_type, :direct_support, :email, :expected_contract_end_date, :federative_unit, :graduation_course, :graduation_degree, :function, :institution, :name, :phone, :term])
   end
 end

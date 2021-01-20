@@ -8,6 +8,8 @@ defmodule ConsultantBoard.Consultants do
 
   alias ConsultantBoard.Consultants.Consultant
 
+
+
   @doc """
   Returns the list of consultants.
 
@@ -43,6 +45,15 @@ defmodule ConsultantBoard.Consultants do
 
       {:sort, %{sort_by: sort_by, sort_order: sort_order}}, query ->
         from c in query, order_by: [{^sort_order, ^sort_by}]
+
+      {:search, %{search: search}}, query ->
+        IO.puts(search)
+        if search != "" and search != nil do
+          from c in query,
+            where: like(c.name, ^"%#{String.replace(search, "%", "\\%")}%") or like(c.federative_unit, ^"%#{String.replace(search, "%", "\\%")}%") or like(c.city, ^"%#{String.replace(search, "%", "\\%")}%")
+        else
+          query
+        end
     end)
     |> Repo.all()
   end
