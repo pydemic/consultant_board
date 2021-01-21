@@ -1,5 +1,5 @@
 <h1>
-  Histórico de deslocamentos no Brasil
+  Consultores em deslocamento no Brasil
 </h1>
 <leaflet-map lat="-15.5" lng="-50">
   <%= for marker <- @federatives_units_locations do %>
@@ -16,7 +16,7 @@
 </leaflet-map>
 
 <h1>
-  Lista de histórico de deslocamentos
+  Lista de consultores em deslocamento
   <%= if @options.filter != "" and  @options.filter != "-", do: " da UF " <> @options.filter %>
   <%= if @options.filter == "-", do: " sem estado definido " %>
 </h1>
@@ -105,47 +105,5 @@
         <% end %>
       </tbody>
     </table>
-    <div class="footer">
-      <div class="center">
-        <%= if @options.page > 1 do %>
-          <%= pagination_link(@socket,
-                              "Primeira",
-                              1,
-                              @options.per_page,
-                              @options.search,
-                              @options.filter,
-                              "anterior") %>
-        <% end %>
-        <%= if @options.page > 1 do %>
-          <%= pagination_link(@socket,
-                              "Anterior",
-                              @options.page - 1,
-                              @options.per_page,
-                              @options.search,
-                              @options.filter,
-                              "anterior") %>
-        <% end %>
-        <%= "Página " <> Integer.to_string(@options.page) %>
-
-        <%= if @options.page < @quantity_travel_trackers/@options.per_page do %>
-          <%= pagination_link(@socket,
-                                "Próxima",
-                                @options.page + 1,
-                                @options.per_page,
-                                @options.search,
-                                @options.filter,
-                                "próxima") %>
-        <% end %>
-        <%= if @options.page < @quantity_travel_trackers/@options.per_page do %>
-          <%= pagination_link(@socket,
-                                "Última",
-                                ceil(@quantity_travel_trackers/@options.per_page),
-                                @options.per_page,
-                                @options.search,
-                                @options.filter,
-                                "última") %>
-        <% end %>
-      </div>
-    </div>
   </div>
 </div>

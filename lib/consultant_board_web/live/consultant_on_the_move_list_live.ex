@@ -1,4 +1,4 @@
-defmodule ConsultantBoardWeb.TravelTrackerListLive do
+defmodule ConsultantBoardWeb.ConsultantOnTheMoveListLive do
   use ConsultantBoardWeb, :live_view
 
   alias ConsultantBoard.TravelTrackers
@@ -9,36 +9,35 @@ defmodule ConsultantBoardWeb.TravelTrackerListLive do
   end
 
   def handle_params(params, _url, socket) do
-    page = String.to_integer(params["page"] || "1")
-    per_page = 15
-
     search = params["search"] || ""
 
     filter = params["filter"] || ""
 
-    sort_by = (params["sort_by"] || "name") |> String.to_atom()
-    sort_order = (params["sort_order"] || "asc") |> String.to_atom()
+    sort_by = (params["sort_by"] || "id") |> String.to_atom()
+    sort_order = (params["sort_order"] || "desc") |> String.to_atom()
 
-    paginate_options = %{page: page, per_page: per_page}
     search_options = %{search: search}
     filter_options = %{filter: filter}
     sort_options = %{sort_by: sort_by, sort_order: sort_order}
 
     travel_trackers =
-      TravelTrackers.list_travel_trackers(
-        paginate: paginate_options,
+      TravelTrackers.list_consultants_on_the_move(
         search: search_options,
         filter: filter_options,
         sort: sort_options
       )
 
     quantity_travel_trackers =
-      TravelTrackers.get_quantity_travel_trackers(
+      TravelTrackers.get_quantity_consultants_on_the_move(
         search: search_options,
         filter: filter_options
       )
 
-    destination_federatives_units = TravelTrackers.list_of_count_by_destination_federative_unit()
+    destination_federatives_units =
+      TravelTrackers.list_of_count_by_destination_federative_unit_consultants_on_the_move(
+        search: search_options,
+        filter: filter_options
+      )
 
     fu_locations = %{
       "Acre - AC" => %{latitude: -8.77, longitude: -70.55},
@@ -86,8 +85,7 @@ defmodule ConsultantBoardWeb.TravelTrackerListLive do
     socket =
       assign(socket,
         options:
-          paginate_options
-          |> Map.merge(search_options)
+          search_options
           |> Map.merge(filter_options)
           |> Map.merge(sort_options),
         travel_trackers: travel_trackers,
@@ -114,21 +112,6 @@ defmodule ConsultantBoardWeb.TravelTrackerListLive do
     {:noreply, socket}
   end
 
-  defp pagination_link(socket, text, page, per_page, search, filter, class) do
-    live_patch(text,
-      to:
-        Routes.live_path(
-          socket,
-          __MODULE__,
-          page: page,
-          per_page: per_page,
-          search: search,
-          filter: filter
-        ),
-      class: class
-    )
-  end
-
   defp sort_link(socket, text, sort_by, options) do
     text =
       if sort_by == options.sort_by do
@@ -144,8 +127,6 @@ defmodule ConsultantBoardWeb.TravelTrackerListLive do
           __MODULE__,
           sort_by: sort_by,
           sort_order: toggle_sort_order(options.sort_order),
-          page: 1,
-          per_page: options.per_page,
           search: options.search,
           filter: options.filter
         )

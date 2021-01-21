@@ -28,6 +28,15 @@ defmodule ConsultantBoard.TravelTrackers do
     |> Repo.all()
   end
 
+  def list_of_count_by_destination_federative_unit do
+    federatives_units = Repo.all(from(c in TravelTracker, select: c.destination_federative_unit))
+
+    federatives_units
+    |> Enum.uniq()
+    |> Enum.sort()
+    |> Enum.map(&%{name: &1, quantity: Enum.count(federatives_units, fn x -> x == &1 end)})
+  end
+
   def get_quantity_travel_trackers(criteria) when is_list(criteria) do
     query = from(c in TravelTracker)
 
@@ -36,6 +45,64 @@ defmodule ConsultantBoard.TravelTrackers do
 
     query_builder(criteria, query)
     |> Repo.aggregate(:count, :id)
+  end
+
+  def list_consultants_on_the_move(criteria) when is_list(criteria) do
+    query = from(c in TravelTracker)
+
+    query_builder(criteria, query)
+    |> Repo.all()
+    |> Enum.filter(
+      fn travel_record ->
+        start_date = parse_date(travel_record.start_date)
+        end_date = parse_date(travel_record.end_date)
+        if not is_nil(start_date) and not is_nil(end_date) do
+          today = Date.utc_today()
+          case Date.compare(today, start_date) do
+            :gt ->
+              case Date.compare(today, end_date) do
+                :lt -> true
+                :eq -> true
+                _ -> false
+              end
+            :eq ->
+              case Date.compare(today, end_date) do
+                :lt -> true
+                :eq -> true
+                _ -> false
+              end
+
+            _ -> false
+          end
+        else
+          false
+        end
+      end
+    )
+  end
+
+  defp parse_date(date) do
+    date
+    |> String.split("/")
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.reverse()
+    |> List.to_tuple()
+    |> Date.from_erl!()
+  rescue
+    _error -> nil
+  end
+
+  def list_of_count_by_destination_federative_unit_consultants_on_the_move(criteria) do
+    federatives_units = Enum.map(list_consultants_on_the_move(criteria), &(&1.destination_federative_unit))
+
+    federatives_units
+    |> Enum.uniq()
+    |> Enum.sort()
+    |> Enum.map(&%{name: &1, quantity: Enum.count(federatives_units, fn x -> x == &1 end)})
+  end
+
+  def get_quantity_consultants_on_the_move(criteria) when is_list(criteria) do
+    Enum.count(list_consultants_on_the_move(criteria))
   end
 
   @doc """

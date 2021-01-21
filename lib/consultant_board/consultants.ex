@@ -33,7 +33,6 @@ defmodule ConsultantBoard.Consultants do
   """
 
   def list_of_count_by_federative_unit do
-    # query = from(c in Consultant)
     federatives_units = Repo.all(from(c in Consultant, select: c.federative_unit))
 
     federatives_units

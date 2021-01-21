@@ -10,7 +10,6 @@ import {LiveSocket} from "phoenix_live_view"
 
 import './leaflet/leaflet-map'
 import './leaflet/leaflet-marker'
-import './leaflet/leaflet-icon'
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})

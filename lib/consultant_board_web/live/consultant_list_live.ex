@@ -51,6 +51,22 @@ defmodule ConsultantBoardWeb.ConsultantListLive do
     {:noreply, socket}
   end
 
+  def handle_event("consultant-search", %{"search" => search, "filter" => filter}, socket) do
+    socket =
+      push_patch(socket,
+        to:
+          Routes.live_path(
+            socket,
+            __MODULE__,
+            page: socket.assigns.options.page,
+            filter: filter,
+            search: search
+          )
+      )
+
+    {:noreply, socket}
+  end
+
   defp pagination_link(socket, text, page, per_page, search, filter, class) do
     live_patch(text,
       to:

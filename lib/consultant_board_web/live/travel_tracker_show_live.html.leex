@@ -1,0 +1,20 @@
+<h1>Histórico de deslocamento</h1>
+<div id="travel_tracker">
+  <div class="wrapper">
+    </br> <b>Data do registro: </b> <%= @travel_tracker.datetime_record %>
+    </br> <b>Nome: </b> <%= @travel_tracker.name %>
+    </br> <b>Unidade: </b> <%= @travel_tracker.unit %>
+    </br> <b>Tipo da viagem: </b> <%= @travel_tracker.travel_type %>
+    </br> <b>Data de Início: </b> <%= @travel_tracker.start_date %>
+    </br> <b>Data de Término: </b> <%= @travel_tracker.end_date %>
+    </br> <b>Objetivo da missão: </b> <%= @travel_tracker.goal %>
+    </br> <b>UF de origem: </b> <%= @travel_tracker.home_federative_unit %>
+    </br> <b>Município de origem: </b> <%= @travel_tracker.home_city %>
+    </br> <b>UF de destino: </b> <%= @travel_tracker.destination_federative_unit %>
+    </br> <b>Município de destino: </b> <%= @travel_tracker.destination_city %>
+    </br> <b>Cidades visitadas: </b> <%= @travel_tracker.visited_cities %>
+    </br> <b>País de origem: </b> <%= @travel_tracker.home_country %>
+    </br> <b>País de destino: </b> <%= @travel_tracker.destination_country %>
+    </br> <b>Cidades visitadas (internacionais): </b> <%= @travel_tracker.visited_cities_international %>
+  </div>
+</div>

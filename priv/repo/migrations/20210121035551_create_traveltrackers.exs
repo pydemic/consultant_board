@@ -3,20 +3,23 @@ defmodule ConsultantBoard.Repo.Migrations.CreateTraveltrackers do
 
   def change do
     create table(:traveltrackers) do
+
+      add :datetime_record, :string
       add :name, :string
       add :name_unaccent, :string
       add :unit, :string
+      add :travel_type, :string
       add :start_date, :string
       add :end_date, :string
-      add :home_country, :string
+      add :goal, :string
       add :home_federative_unit, :string
       add :home_city, :string
-      add :destination_country, :string
       add :destination_federative_unit, :string
       add :destination_city, :string
       add :visited_cities, :string
-      add :goal, :string
-      add :days_away, :string
+      add :home_country, :string
+      add :destination_country, :string
+      add :visited_cities_international, :string
 
       timestamps()
     end

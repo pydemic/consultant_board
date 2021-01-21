@@ -8,6 +8,7 @@ defmodule ConsultantBoardWeb.Router do
     plug :put_root_layout, {ConsultantBoardWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :consultant_board_basic_auth, env: :basic_auth_dashboard_password
   end
 
   pipeline :api do
@@ -17,11 +18,13 @@ defmodule ConsultantBoardWeb.Router do
   scope "/", ConsultantBoardWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    get "/", Redirect, to: "/consultant"
     live "/consultant", ConsultantListLive
     live "/consultant/:id", ConsultantShowLive
     live "/federative_unit", FederativeUnitListLive
     live "/travel_tracker", TravelTrackerListLive
+    live "/travel_tracker/:id", TravelTrackerShowLive
+    live "/consultant_on_the_move", ConsultantOnTheMoveListLive
   end
 
   # Other scopes may use custom stacks.
@@ -43,5 +46,10 @@ defmodule ConsultantBoardWeb.Router do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: ConsultantBoardWeb.Telemetry
     end
+  end
+
+  defp consultant_board_basic_auth(conn, env: env) do
+    password = Application.fetch_env!(:consultant_board, env)
+    Plug.BasicAuth.basic_auth(conn, username: "admin", password: password)
   end
 end

@@ -35,4 +35,6 @@ config :consultant_board,
   spreadsheet_id: System.get_env("CONSULTANT_BOARD_SPREADSHEET_ID"),
   spreadsheet_page_consultant: System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE_CONSULTANTS"),
   spreadsheet_page_travel_tracker:
-    System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE_TRAVEL_TRACKER")
+    System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE_TRAVEL_TRACKER"),
+  basic_auth_dashboard_password:
+    System.get_env("CONSULTANT_BOARD_BASIC_AUTH_DASHBOARD_PASSWORD", "Pass@123")
