@@ -48,23 +48,11 @@ class LeafletMap extends HTMLElement {
                         
             const lat = markerEl.getAttribute('lat')
             const lng = markerEl.getAttribute('lng')
-            const leafletMarkerPin = L.marker([lat, lng], { icon:  pinIcon }).addTo(this.map);
+            L.marker([lat, lng], { icon:  pinIcon }).addTo(this.map);
             const leafletMarkerNumber = L.marker([lat, lng], { icon:  numberIcon }).addTo(this.map);
             leafletMarkerNumber.addEventListener('click', (_event) => {
-                console.log("teste")
                 window.location.href = markerEl.getAttribute('link')
             })
-
-            // const iconEl = markerEl.querySelector('leaflet-icon');
-            // const iconSize = [25.11, 41.22]
-
-            // iconEl.addEventListener('url-updated', (e) => {
-            //     leafletMarker.setIcon(L.icon({
-            //         iconUrl: e.detail,
-            //         iconSize: iconSize,
-            //         iconAnchor: iconSize
-            //     }))
-            // })
         })
     }
 }
