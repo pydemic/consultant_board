@@ -1,4 +1,18 @@
 <h1>Quantidade de consultores por UF</h1>
+<leaflet-map lat="-15.5" lng="-50">
+  <%= for marker <- @federatives_units_locations do %>
+    <%= if marker.latitude != "" and marker.longitude != "" do%>
+      <leaflet-marker
+        lat="<%= marker.latitude %>"
+        lng="<%= marker.longitude %>"
+        number="<%= marker.quantity %>"
+        link="/consultant?filter=<%= marker.name %>"
+      >
+      </leaflet-marker>
+    <% end %>
+  <% end %>
+</leaflet-map>
+
 <div id="federative_unit">
   <div class="wrapper">
     <table>
@@ -31,4 +45,5 @@
       </tbody>
     </table>
   </div>
+
 </div>
