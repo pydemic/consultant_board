@@ -1,4 +1,4 @@
-defmodule ConsultantBoard.DataPuller.GoogleSpreadsheetAPI do
+defmodule ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI do
   use Tesla
 
   require Logger
@@ -9,7 +9,7 @@ defmodule ConsultantBoard.DataPuller.GoogleSpreadsheetAPI do
   @spec extract() :: {:ok, map} | {:error, atom}
   def extract() do
     with {:ok, id} <- Application.fetch_env(:consultant_board, :spreadsheet_id),
-         {:ok, page} <- Application.fetch_env(:consultant_board, :spreadsheet_page),
+         {:ok, page} <- Application.fetch_env(:consultant_board, :spreadsheet_page_consultant),
          {:ok, key} <- Application.fetch_env(:consultant_board, :google_api_key) do
       case get("/#{id}/values/#{page}?key=#{key}") do
         {:ok, %{body: data}} -> {:ok, data["values"]}

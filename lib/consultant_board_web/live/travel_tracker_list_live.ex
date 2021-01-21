@@ -1,10 +1,11 @@
-defmodule ConsultantBoardWeb.ConsultantListLive do
+defmodule ConsultantBoardWeb.TravelTrackerListLive do
   use ConsultantBoardWeb, :live_view
 
-  alias ConsultantBoard.Consultants
+  alias ConsultantBoard.TravelTrackers
 
   def mount(_params, _session, socket) do
-    {:ok, socket, temporary_assigns: [consultants: [], loading: false, quantity_consultants: 0]}
+    {:ok, socket,
+     temporary_assigns: [travel_tracker: [], loading: false, quantity_travel_tracker: 0]}
   end
 
   def handle_params(params, _url, socket) do
@@ -23,16 +24,16 @@ defmodule ConsultantBoardWeb.ConsultantListLive do
     filter_options = %{filter: filter}
     sort_options = %{sort_by: sort_by, sort_order: sort_order}
 
-    consultants =
-      Consultants.list_consultants(
+    travel_trackers =
+      TravelTrackers.list_travel_trackers(
         paginate: paginate_options,
         search: search_options,
         filter: filter_options,
         sort: sort_options
       )
 
-    quantity_consultants =
-      Consultants.get_quantity_consultants(
+    quantity_travel_trackers =
+      TravelTrackers.get_quantity_travel_trackers(
         search: search_options,
         filter: filter_options
       )
@@ -44,8 +45,8 @@ defmodule ConsultantBoardWeb.ConsultantListLive do
           |> Map.merge(search_options)
           |> Map.merge(filter_options)
           |> Map.merge(sort_options),
-        consultants: consultants,
-        quantity_consultants: quantity_consultants
+        travel_trackers: travel_trackers,
+        quantity_travel_trackers: quantity_travel_trackers
       )
 
     {:noreply, socket}

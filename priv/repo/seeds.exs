@@ -1,10 +1,12 @@
 alias ConsultantBoard.Consultants.Consultant
+alias ConsultantBoard.TravelTrackers.TravelTracker
 alias ConsultantBoard.Repo
 
-{:ok, [_header | spreadsheet_data]} = ConsultantBoard.DataPuller.GoogleSpreadsheetAPI.extract()
+{:ok, [_header | consultant_spreadsheet_data]} =
+  ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI.extract()
 
 Enum.each(
-  spreadsheet_data,
+  consultant_spreadsheet_data,
   fn line ->
     # [name, contract_type, term, direct_support, federative_unit, city, institution, graduation_course, function, graduation_degree, phone, email, contract_start_date, expected_contract_end_date]
     name = Enum.at(line, 0, "")
@@ -39,6 +41,49 @@ Enum.each(
       email: email,
       contract_start_date: contract_start_date,
       expected_contract_end_date: expected_contract_end_date
+    }
+    |> Repo.insert!()
+  end
+)
+
+{:ok, [_header | travel_tracker_spreadsheet_data]} =
+  ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI.extract()
+
+Enum.each(
+  travel_tracker_spreadsheet_data,
+  fn line ->
+    # [name, unit, start_date, end_date, home_country, home_federative_unit, home_city, destination_country, destination_federative_unit, destination_city, visited_cities, goal, days_away]
+
+    name = Enum.at(line, 0, "")
+    name_unaccent = name |> String.normalize(:nfd) |> String.replace(~r/[^A-z\s]/u, "")
+    unit = Enum.at(line, 1, "")
+    start_date = Enum.at(line, 2, "")
+    end_date = Enum.at(line, 3, "")
+    home_country = Enum.at(line, 4, "")
+    home_federative_unit = Enum.at(line, 5, "")
+    home_city = Enum.at(line, 6, "")
+    destination_country = Enum.at(line, 7, "")
+    destination_federative_unit = Enum.at(line, 8, "")
+    destination_city = Enum.at(line, 9, "")
+    visited_cities = Enum.at(line, 10, "")
+    goal = Enum.at(line, 11, "")
+    days_away = Enum.at(line, 12, "")
+
+    %TravelTracker{
+      name: name,
+      name_unaccent: name_unaccent,
+      unit: unit,
+      start_date: start_date,
+      end_date: end_date,
+      home_country: home_country,
+      home_federative_unit: home_federative_unit,
+      home_city: home_city,
+      destination_country: destination_country,
+      destination_federative_unit: destination_federative_unit,
+      destination_city: destination_city,
+      visited_cities: visited_cities,
+      goal: goal,
+      days_away: days_away
     }
     |> Repo.insert!()
   end

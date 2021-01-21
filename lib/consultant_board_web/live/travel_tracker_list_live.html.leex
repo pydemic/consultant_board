@@ -1,9 +1,9 @@
 <h1>
-  Consultores
+  Histórico de deslocamento
   <%= if @options.filter != "" and  @options.filter != "-", do: " da UF " <> @options.filter %>
-  <%= if @options.filter == "-", do: " sem estado definido" %>
+  <%= if @options.filter == "-", do: " sem estado definido " %>
 </h1>
-<div id="consultants">
+<div id="travel_trackers">
   <form phx-submit="consultant-search">
     <input type="hidden" name="filter" value="<%= @options.filter %>"/>
     <input type="text" name="search" value="<%= @options.search %>"
@@ -22,7 +22,7 @@
     </div>
   <% end %>
   <div class="wrapper">
-    Quantidade de registros: <%= @quantity_consultants %>
+    Quantidade de registros: <%= @quantity_travel_trackers %>
     <table>
       <thead>
         <tr>
@@ -33,32 +33,50 @@
             <%= sort_link(@socket, "Nome", :name_unaccent, @options) %>
           </th>
           <th>
-            <%= sort_link(@socket, "UF", :federative_unit, @options) %>
+            Data de Início
           </th>
           <th>
-            <%= sort_link(@socket, "Município", :city, @options) %>
+            Data de Término
+          </th>
+          <th>
+            <%= sort_link(@socket, "UF de Origem", :home_federative_unit, @options) %>
+          </th>
+          <th>
+            <%= sort_link(@socket, "UF de destino", :destination_federative_unit, @options) %>
+          </th>
+          <th>
+            <%= sort_link(@socket, "Cidades Visitadas", :visited_cities, @options) %>
           </th>
         </tr>
       </thead>
       <tbody>
-        <%= for consultant <- @consultants do %>
+        <%= for travel_tracker_record <- @travel_trackers do %>
           <tr>
             <td>
-              <span class="id"><%= consultant.id %></span>
+              <span class="id"><%= travel_tracker_record.id %></span>
             </td>
             <td class="item">
-              <%= live_patch consultant.name,
+              <%= live_patch travel_tracker_record.name,
                     to: Routes.live_path(
                               @socket,
                               ConsultantBoardWeb.ConsultantShowLive,
-                              consultant.id
+                              travel_tracker_record.id
                         ) %>
             </td>
             <td>
-              <%= consultant.federative_unit %>
+              <%= travel_tracker_record.start_date %>
             </td>
             <td>
-              <%= consultant.city %>
+              <%= travel_tracker_record.end_date %>
+            </td>
+            <td>
+              <%= travel_tracker_record.home_federative_unit %>
+            </td>
+            <td>
+              <%= travel_tracker_record.destination_federative_unit %>
+            </td>
+            <td>
+              <%= travel_tracker_record.visited_cities %>
             </td>
           </tr>
         <% end %>
@@ -86,7 +104,7 @@
         <% end %>
         <%= "Página " <> Integer.to_string(@options.page) %>
 
-        <%= if @options.page < @quantity_consultants/@options.per_page do %>
+        <%= if @options.page < @quantity_travel_trackers/@options.per_page do %>
           <%= pagination_link(@socket,
                                 "Próxima",
                                 @options.page + 1,
@@ -95,10 +113,10 @@
                                 @options.filter,
                                 "próxima") %>
         <% end %>
-        <%= if @options.page < @quantity_consultants/@options.per_page do %>
+        <%= if @options.page < @quantity_travel_trackers/@options.per_page do %>
           <%= pagination_link(@socket,
                                 "Última",
-                                ceil(@quantity_consultants/@options.per_page),
+                                ceil(@quantity_travel_trackers/@options.per_page),
                                 @options.per_page,
                                 @options.search,
                                 @options.filter,

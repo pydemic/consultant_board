@@ -21,6 +21,7 @@ defmodule ConsultantBoardWeb.Router do
     live "/consultant", ConsultantListLive
     live "/consultant/:id", ConsultantShowLive
     live "/federative_unit", FederativeUnitListLive
+    live "/travel_tracker", TravelTrackerListLive
   end
 
   # Other scopes may use custom stacks.

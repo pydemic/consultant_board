@@ -30,8 +30,9 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
 
-config :consultant_board, [
-    google_api_key: System.get_env("CONSULTANT_BOARD_GOOGLE_API_KEY"),
-    spreadsheet_id: System.get_env("CONSULTANT_BOARD_SPREADSHEET_ID"),
-    spreadsheet_page: System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE")
-  ]
+config :consultant_board,
+  google_api_key: System.get_env("CONSULTANT_BOARD_GOOGLE_API_KEY"),
+  spreadsheet_id: System.get_env("CONSULTANT_BOARD_SPREADSHEET_ID"),
+  spreadsheet_page_consultant: System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE_CONSULTANTS"),
+  spreadsheet_page_travel_tracker:
+    System.get_env("CONSULTANT_BOARD_SPREADSHEET_PAGE_TRAVEL_TRACKER")
