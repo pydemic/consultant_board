@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  consultant_board:
+    image: pydemic/consultant_board:prod
+    restart: unless-stopped
+    environment:
+      CONSULTANT_BOARD__CERTFILE_PATH: /etc/letsencrypt/live/YOUR_HOSTNAME/fullchain.pem
+      CONSULTANT_BOARD__KEYFILE_PATH: /etc/letsencrypt/live/YOUR_HOSTNAME/privkey.pem
+      CONSULTANT_BOARD__HOSTNAME: YOUR_HOSTNAME
+      CONSULTANT_BOARD__ORIGIN_HOSTNAMES: '//YOUR_HOSTNAME'
+      CONSULTANT_BOARD__SECRET_KEY_BASE: GENERATE_ONE_WITH_MIX_PHX_GEN_SECRET
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+    networks:
+      - network
+
+  postgres:
+    image: postgres:13.0
+    restart: unless-stopped
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c pg_stat_statements.max=10000
+    environment:
+      POSTGRES_DB: consultant_board
+      POSTGRES_USER: consultant_board
+      POSTGRES_PASSWORD: consultant_board
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - network
+
+networks:
+  network:
+    name: consultant_board
+volumes:
+  postgres:
+    name: consultant_board_prod_postgres

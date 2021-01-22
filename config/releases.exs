@@ -42,7 +42,9 @@ defmodule ConsultantBoard.Releases.Helper do
   def consultant_board_settings do
     [
       basic_auth_dashboard_password: get_env!("BASIC_AUTH_DASHBOARD_PASSWORD"),
-      google_api_key: get_env!("GOOGLE_API_KEY"),
+      google_api_client_id: get_env!("GOOGLE_CLIENT_ID"),
+      google_api_client_secret: get_env!("GOOGLE_CLIENT_SECRET"),
+      google_api_refresh_token: get_env!("GOOGLE_CLIENT_REFRESH_TOKEN"),
       spreadsheet_id: get_env!("SPREADSHEET_ID"),
       spreadsheet_page_consultant: get_env!("SPREADSHEET_PAGE_CONSULTANT"),
       spreadsheet_page_travel_tracker: get_env!("SPREADSHEET_PAGE_TRAVEL_TRACKER")

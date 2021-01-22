@@ -1,13 +1,13 @@
-alias ConsultantBoard.Consultants.Consultant
-alias ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI
-alias ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI
-alias ConsultantBoard.TravelTrackers.TravelTracker
-alias ConsultantBoard.DataPuller.TokenRefresher
-alias ConsultantBoard.Repo
-
-require Logger
-
 defmodule ConsultantBoard.DataPuller.Seeder do
+  alias ConsultantBoard.Consultants.Consultant
+  alias ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI
+  alias ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI
+  alias ConsultantBoard.TravelTrackers.TravelTracker
+  alias ConsultantBoard.DataPuller.TokenRefresher
+  alias ConsultantBoard.Repo
+
+  require Logger
+
   @spec seeder :: :error | :ok
   def seeder do
     with {:ok, client_id} <- Application.fetch_env(:consultant_board, :google_api_client_id),
