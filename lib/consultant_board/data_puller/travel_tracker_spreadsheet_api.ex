@@ -6,15 +6,24 @@ defmodule ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI do
   plug Tesla.Middleware.BaseUrl, "https://sheets.googleapis.com/v4/spreadsheets/"
   plug Tesla.Middleware.JSON
 
-  @spec extract() :: {:ok, map} | {:error, atom}
+  @spec extract() :: {:ok, list} | {:error, atom}
   def extract() do
     with {:ok, id} <- Application.fetch_env(:consultant_board, :spreadsheet_id),
-         {:ok, page} <- Application.fetch_env(:consultant_board, :spreadsheet_page_travel_tracker),
+         {:ok, page} <-
+           Application.fetch_env(:consultant_board, :spreadsheet_page_travel_tracker),
          {:ok, key} <- Application.fetch_env(:consultant_board, :google_api_key) do
-      case get(IO.inspect("/#{id}/values/#{page}"), headers: [{"Authorization", "Bearer " <> key}])  do
-        {:ok, %{body: data}} -> {:ok, data["values"]}
+      case get("/#{id}/values/#{page}", headers: [{"Authorization", "Bearer " <> key}]) do
+        {:ok, %{body: data}} -> values(data)
         _error -> {:error, :request_failed}
       end
+    end
+  end
+
+  defp values(data) do
+    if not is_nil(data["values"]) do
+      {:ok, data["values"]}
+    else
+      {:error, :request_failed}
     end
   end
 end

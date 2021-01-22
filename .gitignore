@@ -200,7 +200,3 @@ dist
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,visualstudiocode,elixir,erlang,node
-
-# Others
-
-.misc/

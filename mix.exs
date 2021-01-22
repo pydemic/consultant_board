@@ -8,9 +8,11 @@ defmodule ConsultantBoard.MixProject do
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      default_release: :consultant_board,
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
@@ -62,7 +64,17 @@ defmodule ConsultantBoard.MixProject do
       setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      start: ["phx.server"]
+    ]
+  end
+
+  defp releases do
+    [
+      consultant_board: [
+        include_erts: false,
+        include_executables_for: [:unix]
+      ]
     ]
   end
 end
