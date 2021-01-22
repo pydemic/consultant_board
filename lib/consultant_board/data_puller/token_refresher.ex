@@ -4,7 +4,7 @@ defmodule ConsultantBoard.DataPuller.TokenRefresher do
   plug Tesla.Middleware.BaseUrl, "https://oauth2.googleapis.com"
   plug Tesla.Middleware.JSON
 
-  @spec refresh(String.t(), String.t(), String.t()) :: {:ok, String.t()} | {:error, atom}
+  @spec refresh(String.t(), String.t(), String.t()) :: {:ok, map()} | {:error, atom}
   def refresh(client_id, client_secret, refresh_token) do
     now = DateTime.utc_now()
 
@@ -28,7 +28,7 @@ defmodule ConsultantBoard.DataPuller.TokenRefresher do
   defp format_body(body, now) do
     case body do
       %{"access_token" => access_token, "expires_in" => expires_in} ->
-        %{access_token: access_token, expires_at: DateTime.add(now, expires_in)}
+        {:ok, %{access_token: access_token, expires_at: DateTime.add(now, expires_in)}}
 
       _body ->
         {:error, :body_invalid}

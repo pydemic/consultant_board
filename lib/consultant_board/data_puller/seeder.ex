@@ -1,16 +1,72 @@
 alias ConsultantBoard.Consultants.Consultant
+alias ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI
+alias ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI
 alias ConsultantBoard.TravelTrackers.TravelTracker
+alias ConsultantBoard.DataPuller.TokenRefresher
 alias ConsultantBoard.Repo
 
-defmodule ConsultantBoard.DataPuller.Seeder do
-  def seeder do
-    {:ok, [_header | consultant_spreadsheet_data]} =
-      ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI.extract()
+require Logger
 
+defmodule ConsultantBoard.DataPuller.Seeder do
+  @spec seeder :: :error | :ok
+  def seeder do
+    with {:ok, client_id} <- Application.fetch_env(:consultant_board, :google_api_client_id),
+         {:ok, client_secret} <-
+           Application.fetch_env(:consultant_board, :google_api_client_secret),
+         {:ok, refresh_token} <-
+           Application.fetch_env(:consultant_board, :google_api_refresh_token) do
+      Logger.info("Fetching token")
+
+      case TokenRefresher.refresh(client_id, client_secret, refresh_token) do
+        {:ok, %{access_token: access_token}} ->
+          seed_data(access_token)
+
+        {:error, error} ->
+          Logger.error("Failed to get refreshed token. Reason: #{inspect(error)}")
+          :error
+      end
+    end
+  end
+
+  defp seed_data(token) do
+    case [extract_and_seed_consultant(token), extract_and_seed_travel_tracker(token)] do
+      [:ok, :ok] -> :ok
+      _ -> :error
+    end
+  end
+
+  defp extract_and_seed_consultant(token) do
+    Logger.info("Fetching Consultant data")
+
+    case ConsultantSpreadsheetAPI.extract(token) do
+      {:ok, [_header | consultant_spreadsheet_data]} ->
+        Repo.delete_all(Consultant)
+        seed_consultant(consultant_spreadsheet_data)
+
+      {:error, error} ->
+        Logger.error("Failed to fetch Consultant data. Reason: #{inspect(error)}")
+        {:error, error}
+    end
+  end
+
+  defp extract_and_seed_travel_tracker(token) do
+    Logger.info("Fetching Travel Tracker data")
+
+    case TravelTrackerSpreadsheetAPI.extract(token) do
+      {:ok, [_header | travel_tracker_spreadsheet_data]} ->
+        Repo.delete_all(TravelTracker)
+        seed_travel_tracker(travel_tracker_spreadsheet_data)
+
+      {:error, error} ->
+        Logger.error("Failed to fetch TravelTracker data. Reason: #{inspect(error)}")
+        {:error, error}
+    end
+  end
+
+  defp seed_consultant(data) do
     Enum.each(
-      consultant_spreadsheet_data,
+      data,
       fn line ->
-        # [name, contract_type, term, direct_support, federative_unit, city, institution, graduation_course, function, graduation_degree, phone, email, contract_start_date, expected_contract_end_date]
         name = Enum.at(line, 0, "")
         name_unaccent = name |> String.normalize(:nfd) |> String.replace(~r/[^A-z\s]/u, "")
         contract_type = Enum.at(line, 1, "")
@@ -47,15 +103,12 @@ defmodule ConsultantBoard.DataPuller.Seeder do
         |> Repo.insert!()
       end
     )
+  end
 
-    {:ok, [_header | travel_tracker_spreadsheet_data]} =
-      ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI.extract()
-
+  defp seed_travel_tracker(data) do
     Enum.each(
-      travel_tracker_spreadsheet_data,
+      data,
       fn line ->
-        # [name, unit, start_date, end_date, home_country, home_federative_unit, home_city, destination_country, destination_federative_unit, destination_city, visited_cities, goal, days_away]
-
         datetime_record = Enum.at(line, 0, "")
         name = Enum.at(line, 1, "")
         name_unaccent = name |> String.normalize(:nfd) |> String.replace(~r/[^A-z\s]/u, "")

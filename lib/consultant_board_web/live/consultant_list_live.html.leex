@@ -26,9 +26,6 @@
     <table>
       <thead>
         <tr>
-          <th>
-            <%= sort_link(@socket, "Linha", :id, @options) %>
-          </th>
           <th class="item">
             <%= sort_link(@socket, "Nome", :name_unaccent, @options) %>
           </th>
@@ -43,9 +40,6 @@
       <tbody>
         <%= for consultant <- @consultants do %>
           <tr>
-            <td>
-              <span class="id"><%= consultant.id %></span>
-            </td>
             <td class="item">
               <%= live_patch consultant.name,
                     to: Routes.live_path(
