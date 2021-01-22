@@ -11,6 +11,8 @@ defmodule ConsultantBoardWeb.ConsultantListLive do
     page = String.to_integer(params["page"] || "1")
     per_page = 15
 
+    error = params["error"] || ""
+
     search = params["search"] || ""
 
     filter = params["filter"] || ""
@@ -45,7 +47,8 @@ defmodule ConsultantBoardWeb.ConsultantListLive do
           |> Map.merge(filter_options)
           |> Map.merge(sort_options),
         consultants: consultants,
-        quantity_consultants: quantity_consultants
+        quantity_consultants: quantity_consultants,
+        error: error
       )
 
     {:noreply, socket}

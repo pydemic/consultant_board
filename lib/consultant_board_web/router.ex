@@ -18,7 +18,7 @@ defmodule ConsultantBoardWeb.Router do
   scope "/", ConsultantBoardWeb do
     pipe_through :browser
 
-    get "/", Redirect, to: "/consultant"
+    get "/", RedirectWithSeeder, to: "/consultant"
     live "/consultant", ConsultantListLive
     live "/consultant/:id", ConsultantShowLive
     live "/federative_unit", FederativeUnitListLive

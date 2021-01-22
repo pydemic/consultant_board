@@ -266,5 +266,14 @@ header nav a {
 
 .number-icon {
   text-align: center;
-  color: White; }
+  color: white; }
+
+.refresh-button {
+  position: absolute;
+  right: 0; }
+
+.error {
+  margin: auto;
+  color: red;
+  width: 50%; }
 
