@@ -8,7 +8,7 @@ WORKDIR /app
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-RUN apk add --update git build-base nodejs yarn python
+RUN apk add --update git build-base nodejs yarn python3
 
 COPY assets/package.json assets/yarn.lock assets/
 COPY config config

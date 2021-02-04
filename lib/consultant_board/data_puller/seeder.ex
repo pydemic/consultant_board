@@ -3,42 +3,26 @@ defmodule ConsultantBoard.DataPuller.Seeder do
   alias ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI
   alias ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI
   alias ConsultantBoard.TravelTrackers.TravelTracker
-  alias ConsultantBoard.DataPuller.TokenRefresher
   alias ConsultantBoard.Repo
 
   require Logger
 
   @spec seeder :: :error | :ok
   def seeder do
-    with {:ok, client_id} <- Application.fetch_env(:consultant_board, :google_api_client_id),
-         {:ok, client_secret} <-
-           Application.fetch_env(:consultant_board, :google_api_client_secret),
-         {:ok, refresh_token} <-
-           Application.fetch_env(:consultant_board, :google_api_refresh_token) do
-      Logger.info("Fetching token")
-
-      case TokenRefresher.refresh(client_id, client_secret, refresh_token) do
-        {:ok, %{access_token: access_token}} ->
-          seed_data(access_token)
-
-        {:error, error} ->
-          Logger.error("Failed to get refreshed token. Reason: #{inspect(error)}")
-          :error
-      end
-    end
+    seed_data()
   end
 
-  defp seed_data(token) do
-    case [extract_and_seed_consultant(token), extract_and_seed_travel_tracker(token)] do
+  defp seed_data() do
+    case [extract_and_seed_consultant(), extract_and_seed_travel_tracker()] do
       [:ok, :ok] -> :ok
       _ -> :error
     end
   end
 
-  defp extract_and_seed_consultant(token) do
+  defp extract_and_seed_consultant() do
     Logger.info("Fetching Consultant data")
 
-    case ConsultantSpreadsheetAPI.extract(token) do
+    case ConsultantSpreadsheetAPI.extract() do
       {:ok, [_header | consultant_spreadsheet_data]} ->
         Repo.delete_all(Consultant)
         seed_consultant(consultant_spreadsheet_data)
@@ -49,10 +33,10 @@ defmodule ConsultantBoard.DataPuller.Seeder do
     end
   end
 
-  defp extract_and_seed_travel_tracker(token) do
+  defp extract_and_seed_travel_tracker() do
     Logger.info("Fetching Travel Tracker data")
 
-    case TravelTrackerSpreadsheetAPI.extract(token) do
+    case TravelTrackerSpreadsheetAPI.extract() do
       {:ok, [_header | travel_tracker_spreadsheet_data]} ->
         Repo.delete_all(TravelTracker)
         seed_travel_tracker(travel_tracker_spreadsheet_data)

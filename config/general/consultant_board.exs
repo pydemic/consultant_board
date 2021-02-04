@@ -1,9 +1,7 @@
 import Config
 
 config :consultant_board,
-  google_api_client_id: System.get_env("CONSULTANT_BOARD__GOOGLE_CLIENT_ID"),
-  google_api_client_secret: System.get_env("CONSULTANT_BOARD__GOOGLE_CLIENT_SECRET"),
-  google_api_refresh_token: System.get_env("CONSULTANT_BOARD__GOOGLE_CLIENT_REFRESH_TOKEN"),
+  api_key: System.get_env("CONSULTANT_BOARD__API_KEY"),
   spreadsheet_id: System.get_env("CONSULTANT_BOARD__SPREADSHEET_ID"),
   spreadsheet_page_consultant: System.get_env("CONSULTANT_BOARD__SPREADSHEET_PAGE_CONSULTANT"),
   spreadsheet_page_travel_tracker:
