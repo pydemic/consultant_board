@@ -49,7 +49,8 @@ defmodule ConsultantBoard.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:tesla, "~> 1.4.0"}
+      {:tesla, "~> 1.4.0"},
+      {:goth, "~> 1.2"}
     ]
   end
 

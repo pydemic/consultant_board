@@ -42,11 +42,14 @@ defmodule ConsultantBoard.Releases.Helper do
   def consultant_board_settings do
     [
       basic_auth_dashboard_password: get_env!("BASIC_AUTH_DASHBOARD_PASSWORD"),
-      api_key: get_env!("API_KEY"),
       spreadsheet_id: get_env!("SPREADSHEET_ID"),
       spreadsheet_page_consultant: get_env!("SPREADSHEET_PAGE_CONSULTANT"),
       spreadsheet_page_travel_tracker: get_env!("SPREADSHEET_PAGE_TRAVEL_TRACKER")
     ]
+  end
+
+  def goth_setting do
+    get_env!("SERVICE_ACCOUNT")
   end
 
   def repo_settings do
@@ -98,3 +101,4 @@ alias ConsultantBoard.Releases.Helper
 config :consultant_board, ConsultantBoardWeb.Endpoint, Helper.endpoint_settings()
 config :consultant_board, ConsultantBoard.Repo, Helper.repo_settings()
 config :consultant_board, Helper.consultant_board_settings()
+config :goth, json: Helper.goth_setting()

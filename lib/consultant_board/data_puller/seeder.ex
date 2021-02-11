@@ -3,26 +3,36 @@ defmodule ConsultantBoard.DataPuller.Seeder do
   alias ConsultantBoard.DataPuller.ConsultantSpreadsheetAPI
   alias ConsultantBoard.DataPuller.TravelTrackerSpreadsheetAPI
   alias ConsultantBoard.TravelTrackers.TravelTracker
+  alias ConsultantBoard.DataPuller.TokenRefresher
   alias ConsultantBoard.Repo
 
   require Logger
 
   @spec seeder :: :error | :ok
   def seeder do
-    seed_data()
+    Logger.info("Fetching token")
+
+    case TokenRefresher.refresh() do
+      {:ok, %{token: access_token}} ->
+        seed_data(access_token)
+
+      {:error, error} ->
+        Logger.error("Failed to get refreshed token. Reason: #{inspect(error)}")
+        :error
+    end
   end
 
-  defp seed_data() do
-    case [extract_and_seed_consultant(), extract_and_seed_travel_tracker()] do
+  defp seed_data(token) do
+    case [extract_and_seed_consultant(token), extract_and_seed_travel_tracker(token)] do
       [:ok, :ok] -> :ok
       _ -> :error
     end
   end
 
-  defp extract_and_seed_consultant() do
+  defp extract_and_seed_consultant(token) do
     Logger.info("Fetching Consultant data")
 
-    case ConsultantSpreadsheetAPI.extract() do
+    case ConsultantSpreadsheetAPI.extract(token) do
       {:ok, [_header | consultant_spreadsheet_data]} ->
         Repo.delete_all(Consultant)
         seed_consultant(consultant_spreadsheet_data)
@@ -33,10 +43,10 @@ defmodule ConsultantBoard.DataPuller.Seeder do
     end
   end
 
-  defp extract_and_seed_travel_tracker() do
+  defp extract_and_seed_travel_tracker(token) do
     Logger.info("Fetching Travel Tracker data")
 
-    case TravelTrackerSpreadsheetAPI.extract() do
+    case TravelTrackerSpreadsheetAPI.extract(token) do
       {:ok, [_header | travel_tracker_spreadsheet_data]} ->
         Repo.delete_all(TravelTracker)
         seed_travel_tracker(travel_tracker_spreadsheet_data)
